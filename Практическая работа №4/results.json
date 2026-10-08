@@ -1,0 +1,1672 @@
+{
+ "stand": {
+  "ОС": "Windows-11-10.0.26200-SP0",
+  "Python": "3.12.10",
+  "Java": "openjdk version \"21.0.12.1\" 2026-08-18 LTS",
+  "PySpark / Spark": "3.5.3",
+  "Логических CPU": 16,
+  "Оперативная память": "15.2 ГБ",
+  "spark.master": "local[*]",
+  "spark.default.parallelism": 16,
+  "spark.sql.shuffle.partitions": "8",
+  "spark.sql.adaptive.enabled": "false"
+ },
+ "baseline": {
+  "Jobs": 1,
+  "Stages": 2,
+  "Tasks по Stages": [
+   4,
+   1
+  ],
+  "Tasks в ключевой Stage": 4,
+  "Shuffle Write, KiB": 0.2,
+  "Shuffle Read, KiB": 0.2
+ },
+ "lazy": {
+  "build_s": 0.049319800000375835,
+  "jobs_after_transformations": 0,
+  "count_s": 0.6609509999998409,
+  "rows": 1000163,
+  "jobs_after_action": 1
+ },
+ "input_partitions": 15,
+ "parts_ui": {
+  "Jobs": 1,
+  "Stages": 2,
+  "Tasks по Stages": [
+   15,
+   8
+  ],
+  "Tasks в ключевой Stage": 15,
+  "Shuffle Write, KiB": 0.9,
+  "Shuffle Read, KiB": 0.9
+ },
+ "top_states": [
+  [
+   "SP",
+   404268,
+   40.42
+  ],
+  [
+   "MG",
+   126336,
+   12.63
+  ],
+  [
+   "RJ",
+   121169,
+   12.11
+  ],
+  [
+   "RS",
+   61851,
+   6.18
+  ],
+  [
+   "PR",
+   57859,
+   5.78
+  ]
+ ],
+ "profile": {
+  "repartition(4)": {
+   "sizes": [
+    250040,
+    250041,
+    250041,
+    250041
+   ],
+   "min": 250040,
+   "max": 250041,
+   "mean": 250040.75,
+   "Jobs": 3,
+   "Stages": 13,
+   "Tasks по Stages": [
+    15,
+    16,
+    4,
+    8,
+    15,
+    16,
+    4,
+    8,
+    15,
+    16,
+    4,
+    8,
+    4
+   ],
+   "Tasks в ключевой Stage": 16,
+   "Shuffle Write, KiB": 347.9,
+   "Shuffle Read, KiB": 348.1
+  },
+  "coalesce(4)": {
+   "sizes": [
+    195064,
+    626485,
+    90152,
+    88462
+   ],
+   "min": 88462,
+   "max": 626485,
+   "mean": 250040.75,
+   "Jobs": 3,
+   "Stages": 10,
+   "Tasks по Stages": [
+    15,
+    4,
+    8,
+    15,
+    4,
+    8,
+    15,
+    4,
+    8,
+    4
+   ],
+   "Tasks в ключевой Stage": 15,
+   "Shuffle Write, KiB": 306.4,
+   "Shuffle Read, KiB": 306.6
+  }
+ },
+ "top_sellers": [
+  [
+   "4869f7a5dfa277a7dca6462dcf3b52b2",
+   1156,
+   229472.63,
+   198.51
+  ],
+  [
+   "53243585a1d6dc2643021fd1853d8905",
+   410,
+   222776.05,
+   543.36
+  ],
+  [
+   "4a3ca9315b744ce9f8e9374361493884",
+   1987,
+   200472.92,
+   100.89
+  ],
+  [
+   "fa1c13f2614d7b5c4749cbc52fecda94",
+   586,
+   194042.03,
+   331.13
+  ],
+  [
+   "7c67e1448b00f6e969d365cea6b010ab",
+   1364,
+   187923.89,
+   137.77
+  ]
+ ],
+ "ui_groupby": {
+  "Jobs": 2,
+  "Stages": 4,
+  "Tasks по Stages": [
+   4,
+   8,
+   4,
+   8
+  ],
+  "Tasks в ключевой Stage": 8,
+  "Shuffle Write, KiB": 877.1,
+  "Shuffle Read, KiB": 877.1
+ },
+ "join": {
+  "SMJ": {
+   "rows": 112650,
+   "time": 0.7519588999994085,
+   "exchange": 2,
+   "sorts": 3,
+   "has_SortMergeJoin": true,
+   "Jobs": 1,
+   "Stages": 4,
+   "Tasks по Stages": [
+    1,
+    4,
+    8,
+    1
+   ],
+   "Tasks в ключевой Stage": 8,
+   "Shuffle Write, KiB": 3832.9,
+   "Shuffle Read, KiB": 3832.9
+  },
+  "BHJ": {
+   "rows": 112650,
+   "time": 0.5746024000000034,
+   "exchange": 0,
+   "has_BroadcastHashJoin": true,
+   "has_BroadcastExchange": true,
+   "Jobs": 2,
+   "Stages": 3,
+   "Tasks по Stages": [
+    1,
+    4,
+    1
+   ],
+   "Tasks в ключевой Stage": 4,
+   "Shuffle Write, KiB": 0.2,
+   "Shuffle Read, KiB": 0.2
+  }
+ },
+ "nocache": {
+  "a1": 0.49120979999952397,
+  "a2": 0.4599243000002389,
+  "Jobs": 6,
+  "Stages": 10,
+  "Tasks по Stages": [
+   1,
+   1,
+   4,
+   8,
+   1,
+   1,
+   1,
+   4,
+   8,
+   1
+  ],
+  "Tasks в ключевой Stage": 8,
+  "Shuffle Write, KiB": 15.6,
+  "Shuffle Read, KiB": 15.6
+ },
+ "cache": {
+  "mat": 1.1304743999999118,
+  "a1": 0.417787600000338,
+  "a2": 0.2117751000005228,
+  "rows": 112650,
+  "checksum_equal": true,
+  "storage": [
+   {
+    "name": "*(3) Project [seller_id#298, product_id#297, order_id#295, o",
+    "memory_kib": 8560.3,
+    "disk_kib": 0.0,
+    "partitions": 4
+   }
+  ],
+  "Jobs": 5,
+  "Stages": 10,
+  "Tasks по Stages": [
+   1,
+   1,
+   4,
+   1,
+   4,
+   8,
+   1,
+   4,
+   8,
+   1
+  ],
+  "Tasks в ключевой Stage": 8,
+  "Shuffle Write, KiB": 15.8,
+  "Shuffle Read, KiB": 15.8
+ },
+ "bench": [
+  {
+   "p": 1,
+   "runs": [
+    0.23263039999983448,
+    0.10628629999973782,
+    0.1296818999999232
+   ],
+   "median": 0.1296818999999232,
+   "checksum": 1885618790.063052,
+   "speedup": 1.0
+  },
+  {
+   "p": 2,
+   "runs": [
+    0.27857660000063333,
+    0.16909409999971103,
+    0.24809619999996357
+   ],
+   "median": 0.24809619999996357,
+   "checksum": 1885618790.0630507,
+   "speedup": 0.5227081269279507
+  },
+  {
+   "p": 4,
+   "runs": [
+    0.22758650000014313,
+    0.19993729999987409,
+    0.19191619999946852
+   ],
+   "median": 0.19993729999987409,
+   "checksum": 1885618790.0630512,
+   "speedup": 0.6486128401254037
+  },
+  {
+   "p": 8,
+   "runs": [
+    0.34104329999991023,
+    0.22231939999983297,
+    0.2685639999999694
+   ],
+   "median": 0.2685639999999694,
+   "checksum": 1885618790.0630512,
+   "speedup": 0.482871494317697
+  },
+  {
+   "p": 16,
+   "runs": [
+    0.4101000999999087,
+    0.269740499999898,
+    0.2652208999998038
+   ],
+   "median": 0.269740499999898,
+   "checksum": 1885618790.0630512,
+   "speedup": 0.48076540230322184
+  },
+  {
+   "p": 32,
+   "runs": [
+    0.5821063999992475,
+    0.39586109999982,
+    0.3976556999996319
+   ],
+   "median": 0.3976556999996319,
+   "checksum": 1885618790.0630512,
+   "speedup": 0.3261160345495946
+  }
+ ],
+ "shuffle_q": [
+  {
+   "q": 2,
+   "groups": 27,
+   "time": 0.6525433999995585
+  },
+  {
+   "q": 4,
+   "groups": 27,
+   "time": 0.4353832999995575
+  },
+  {
+   "q": 8,
+   "groups": 27,
+   "time": 0.4254240000000209
+  },
+  {
+   "q": 16,
+   "groups": 27,
+   "time": 0.40578650000043126
+  },
+  {
+   "q": 32,
+   "groups": 27,
+   "time": 0.6251274000005651
+  }
+ ],
+ "small": [
+  {
+   "p": 1,
+   "files": 1,
+   "total_mib": 6.456171035766602,
+   "avg_kib": 6611.119140625
+  },
+  {
+   "p": 4,
+   "files": 4,
+   "total_mib": 7.4323577880859375,
+   "avg_kib": 1902.68359375
+  },
+  {
+   "p": 16,
+   "files": 16,
+   "total_mib": 8.73182201385498,
+   "avg_kib": 558.8366088867188
+  },
+  {
+   "p": 64,
+   "files": 64,
+   "total_mib": 10.284191131591797,
+   "avg_kib": 164.54705810546875
+  }
+ ],
+ "aqe": {
+  "adaptive_plan": true,
+  "Jobs": 2,
+  "Stages": 3,
+  "Tasks по Stages": [
+   15,
+   15,
+   1
+  ],
+  "Tasks в ключевой Stage": 15,
+  "Shuffle Write, KiB": 3.2,
+  "Shuffle Read, KiB": 3.2
+ },
+ "self": {
+  "orders_rows": 99441,
+  "payments_rows": 103886,
+  "orders_parts": 5,
+  "payments_parts": 2,
+  "lazy": {
+   "jobs_before": 0,
+   "jobs_after": 1,
+   "rows": 103877,
+   "count_s": 0.13444350000008853
+  },
+  "plans": {
+   "repartition(4)": true,
+   "coalesce(4)": true
+  },
+  "prof": {
+   "repartition(4)": {
+    "sizes": [
+     25972,
+     25971,
+     25971,
+     25972
+    ],
+    "min": 25971,
+    "max": 25972,
+    "mean": 25971.5,
+    "Jobs": 2,
+    "Stages": 9,
+    "Tasks по Stages": [
+     2,
+     16,
+     4,
+     8,
+     2,
+     16,
+     4,
+     8,
+     4
+    ],
+    "Tasks в ключевой Stage": 16,
+    "Shuffle Write, KiB": 23.8,
+    "Shuffle Read, KiB": 24.0
+   },
+   "coalesce(4)": {
+    "sizes": [
+     76795,
+     5775,
+     19784,
+     1532
+    ],
+    "min": 1532,
+    "max": 76795,
+    "mean": 25971.5,
+    "Jobs": 2,
+    "Stages": 7,
+    "Tasks по Stages": [
+     2,
+     4,
+     8,
+     2,
+     4,
+     8,
+     4
+    ],
+    "Tasks в ключевой Stage": 8,
+    "Shuffle Write, KiB": 21.0,
+    "Shuffle Read, KiB": 21.2
+   }
+  },
+  "groupby_rows": [
+   [
+    "credit_card",
+    76795,
+    12542084.19
+   ],
+   [
+    "boleto",
+    19784,
+    2869361.27
+   ],
+   [
+    "voucher",
+    5775,
+    379436.87
+   ],
+   [
+    "debit_card",
+    1529,
+    217989.79
+   ],
+   [
+    "not_defined",
+    3,
+    0.0
+   ]
+  ],
+  "groupby_exchange": true,
+  "groupby_ui": {
+   "Jobs": 3,
+   "Stages": 7,
+   "Tasks по Stages": [
+    2,
+    8,
+    2,
+    8,
+    2,
+    8,
+    5
+   ],
+   "Tasks в ключевой Stage": 8,
+   "Shuffle Write, KiB": 1.9,
+   "Shuffle Read, KiB": 2.6
+  },
+  "join": {
+   "SMJ": {
+    "rows": 103886,
+    "time": 0.3677290000005087,
+    "exchange": 2,
+    "ok": true,
+    "Jobs": 1,
+    "Stages": 4,
+    "Tasks по Stages": [
+     2,
+     5,
+     8,
+     1
+    ],
+    "Tasks в ключевой Stage": 8,
+    "Shuffle Write, KiB": 6709.5,
+    "Shuffle Read, KiB": 6709.5
+   },
+   "BHJ": {
+    "rows": 103886,
+    "time": 0.35892320000039035,
+    "exchange": 0,
+    "ok": true,
+    "Jobs": 2,
+    "Stages": 3,
+    "Tasks по Stages": [
+     2,
+     5,
+     1
+    ],
+    "Tasks в ключевой Stage": 5,
+    "Shuffle Write, KiB": 0.3,
+    "Shuffle Read, KiB": 0.3
+   }
+  },
+  "cache": {
+   "nc1": 0.4382641000001968,
+   "nc2": 0.4265691999999035,
+   "mat": 0.5304833999998664,
+   "c1": 0.23604430000068533,
+   "c2": 0.25232559999949444
+  },
+  "bench": [
+   {
+    "p": 1,
+    "runs": [
+     0.5006948999998713,
+     0.4169228999999177,
+     0.36487550000038027
+    ],
+    "median": 0.4169228999999177,
+    "speedup": 1.0
+   },
+   {
+    "p": 4,
+    "runs": [
+     0.45923079999920446,
+     0.3977638999995179,
+     0.419380799999999
+    ],
+    "median": 0.419380799999999,
+    "speedup": 0.9941392166735309
+   },
+   {
+    "p": 16,
+    "runs": [
+     0.6745809000003646,
+     0.5598387000000002,
+     0.6146214000000327
+    ],
+    "median": 0.6146214000000327,
+    "speedup": 0.6783410079764478
+   },
+   {
+    "p": 64,
+    "runs": [
+     1.299102199999652,
+     1.4076426000001447,
+     1.2284503999999288
+    ],
+    "median": 1.299102199999652,
+    "speedup": 0.3209315633520053
+   }
+  ],
+  "small": [
+   {
+    "p": 2,
+    "files": 2,
+    "total_mib": 3.707167625427246,
+    "avg_kib": 1898.06982421875
+   },
+   {
+    "p": 32,
+    "files": 32,
+    "total_mib": 3.855992317199707,
+    "avg_kib": 123.39175415039062
+   }
+  ]
+ },
+ "ui_url": "http://172.22.241.166:4040",
+ "ui_jobs": [
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 131,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 34,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 130,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 4,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 129,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 151,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 128,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 151,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 127,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 151,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 126,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 55,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 125,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 55,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 124,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 55,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 123,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 31,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 122,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 31,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 121,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 31,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 120,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 3,
+   "tasks": 8,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 119,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 3,
+   "tasks": 8,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 118,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 3,
+   "tasks": 8,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 117,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\297079241",
+   "stages": 6,
+   "tasks": 31,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 116,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 3,
+   "tasks": 14,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 115,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 3,
+   "tasks": 14,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 114,
+   "name": "count at <unknown>:0",
+   "stages": 2,
+   "tasks": 6,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 113,
+   "name": "$anonfun$withThreadLocalCaptured$1 at FutureTask.java:317",
+   "stages": 1,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 112,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 3,
+   "tasks": 14,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 111,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 1,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 110,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 3,
+   "tasks": 14,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 109,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 1,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 108,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 3,
+   "tasks": 14,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 107,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3569689872.",
+   "stages": 1,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 106,
+   "name": "count at <unknown>:0",
+   "stages": 2,
+   "tasks": 6,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_BHJ",
+   "jobId": 105,
+   "name": "$anonfun$withThreadLocalCaptured$1 at FutureTask.java:317",
+   "stages": 1,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_SMJ",
+   "jobId": 104,
+   "name": "count at <unknown>:0",
+   "stages": 4,
+   "tasks": 16,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_GB",
+   "jobId": 103,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\566374914",
+   "stages": 3,
+   "tasks": 15,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_GB",
+   "jobId": 102,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\566374914",
+   "stages": 2,
+   "tasks": 10,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_GB",
+   "jobId": 101,
+   "name": "showString at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 10,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_COAL",
+   "jobId": 100,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\566374914",
+   "stages": 4,
+   "tasks": 18,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_COAL",
+   "jobId": 99,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\566374914",
+   "stages": 3,
+   "tasks": 14,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_REP",
+   "jobId": 98,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\566374914",
+   "stages": 5,
+   "tasks": 34,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_REP",
+   "jobId": 97,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\566374914",
+   "stages": 4,
+   "tasks": 30,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_S_LAZY",
+   "jobId": 96,
+   "name": "count at <unknown>:0",
+   "stages": 2,
+   "tasks": 3,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_AQE",
+   "jobId": 95,
+   "name": "count at <unknown>:0",
+   "stages": 2,
+   "tasks": 3,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_AQE",
+   "jobId": 94,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 6,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_AQE",
+   "jobId": 93,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_AQE",
+   "jobId": 92,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_AQE",
+   "jobId": 91,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\155470096",
+   "stages": 2,
+   "tasks": 16,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_AQE",
+   "jobId": 90,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\155470096",
+   "stages": 1,
+   "tasks": 15,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 89,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 88,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 68,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 87,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 20,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 86,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 8,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 85,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 5,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 84,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 4,
+   "tasks": 56,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 83,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 4,
+   "tasks": 40,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 82,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 4,
+   "tasks": 32,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 81,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 4,
+   "tasks": 28,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 80,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 4,
+   "tasks": 26,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 79,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 41,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 78,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 41,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 77,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 41,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 76,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 25,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 75,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 25,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 74,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 25,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 73,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 17,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 72,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 17,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 71,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 17,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 70,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 69,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 68,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 67,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 11,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 66,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 11,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 65,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 11,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 64,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 63,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 62,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 61,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\2229111134.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 60,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 59,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 58,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 5,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 57,
+   "name": "$anonfun$withThreadLocalCaptured$1 at FutureTask.java:317",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_CACHE",
+   "jobId": 56,
+   "name": "$anonfun$withThreadLocalCaptured$1 at FutureTask.java:317",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_NOCACHE",
+   "jobId": 55,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_NOCACHE",
+   "jobId": 54,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_NOCACHE",
+   "jobId": 53,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_NOCACHE",
+   "jobId": 52,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_NOCACHE",
+   "jobId": 51,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_NOCACHE",
+   "jobId": 50,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_BHJ",
+   "jobId": 49,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 3,
+   "tasks": 13,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_BHJ",
+   "jobId": 48,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_BHJ",
+   "jobId": 47,
+   "name": "first at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1080764052.",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_BHJ",
+   "jobId": 46,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 5,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_BHJ",
+   "jobId": 45,
+   "name": "$anonfun$withThreadLocalCaptured$1 at FutureTask.java:317",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_SMJ",
+   "jobId": 44,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 4,
+   "tasks": 14,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_GROUPBY",
+   "jobId": 43,
+   "name": "take at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\1035683300.p",
+   "stages": 2,
+   "tasks": 12,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_GROUPBY",
+   "jobId": 42,
+   "name": "showString at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 12,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_COALESCE",
+   "jobId": 41,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\368717637",
+   "stages": 4,
+   "tasks": 31,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_COALESCE",
+   "jobId": 40,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\368717637",
+   "stages": 3,
+   "tasks": 27,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_COALESCE",
+   "jobId": 39,
+   "name": "showString at NativeMethodAccessorImpl.java:0",
+   "stages": 3,
+   "tasks": 27,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_REPART",
+   "jobId": 38,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\368717637",
+   "stages": 5,
+   "tasks": 47,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_REPART",
+   "jobId": 37,
+   "name": "collect at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\368717637",
+   "stages": 4,
+   "tasks": 43,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_REPART",
+   "jobId": 36,
+   "name": "showString at NativeMethodAccessorImpl.java:0",
+   "stages": 4,
+   "tasks": 43,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_PARTS",
+   "jobId": 35,
+   "name": "take at C:\\Users\\relax\\AppData\\Local\\Temp\\ipykernel_24720\\3506256398.p",
+   "stages": 2,
+   "tasks": 23,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_PARTS",
+   "jobId": 34,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 16,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_PARTS",
+   "jobId": 33,
+   "name": "showString at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 23,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_PARTS",
+   "jobId": 32,
+   "name": "showString at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 23,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_LAZY",
+   "jobId": 31,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 16,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": "P4_BASELINE",
+   "jobId": 30,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 5,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 29,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 28,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 27,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 5,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 26,
+   "name": "count at NativeMethodAccessorImpl.java:0",
+   "stages": 2,
+   "tasks": 16,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 25,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 24,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 23,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 22,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 21,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 20,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 19,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 2,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 18,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 17,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 5,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 16,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 5,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 15,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 14,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 13,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 12,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 11,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 10,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 9,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 8,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 7,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 6,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 5,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 4,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 4,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 4,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 3,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 2,
+   "name": "parquet at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 16,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 1,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 16,
+   "status": "SUCCEEDED"
+  },
+  {
+   "group": null,
+   "jobId": 0,
+   "name": "csv at NativeMethodAccessorImpl.java:0",
+   "stages": 1,
+   "tasks": 1,
+   "status": "SUCCEEDED"
+  }
+ ]
+}

@@ -1,0 +1,433 @@
+#%% md
+# Практическая работа №3. Самостоятельная работа: распределённый анализ собственного датасета
+
+**Набор данных:** оптовые/розничные продажи торговой компании (каталог `archive/`): факт «Продажи» (~865 тыс. строк, 11 полей), справочники «Продукты» (~21 тыс.) и «Клиенты» (~3,8 тыс.). Источник: учебный набор из каталога `archive/`, выданный вместе с практической работой; условия использования — только в учебных целях. Данные обезличены (названия организаций и ИНН вымышленные, физические лица представлены единственной записью «Частное лицо»), персональных данных нет.
+
+**Цель:** воспроизвести модель Spark на другой предметной области: оценить выручку, скидки, маржу и структуру продаж по филиалам, месяцам, товарным группам и клиентам.
+
+## 1. Постановка задачи и архитектура входа
+Исходные файлы — CSV с разделителем табуляции, кодировка UTF-8 с BOM, десятичная запятая, даты `dd.MM.yyyy`, пустые значения записаны строкой `NULL`. Поэтому staging из СУБД не нужен: Spark читает CSV напрямую, а типы задаются явной схемой.
+
+Связи: `Продажи.Product_key → Продукты.Product_Key` (многие-к-одному), `Продажи.Client_ID → Клиенты.Client_ID` (многие-к-одному).
+#%% md
+## 2. SparkSession и окружение
+#%% code
+import os, sys, subprocess
+from pathlib import Path
+
+# Windows: для записи файлов Spark нужен winutils.exe/hadoop.dll (лежат в ./hadoop/bin)
+if os.name == "nt" and Path("hadoop/bin/winutils.exe").exists():
+    os.environ["HADOOP_HOME"] = str(Path("hadoop").resolve())
+    os.environ["PATH"] += os.pathsep + str(Path("hadoop/bin").resolve())
+
+import pyspark
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+print("Python :", sys.version.split()[0])
+print("PySpark:", pyspark.__version__)
+print(subprocess.run(["java", "-version"], capture_output=True, text=True).stderr.splitlines()[0])
+
+spark = (
+    SparkSession.builder
+    .appName("Practice4_OwnDataset_Sales")
+    .master("local[*]")
+    .config("spark.driver.memory", "2g")
+    .config("spark.sql.shuffle.partitions", "8")
+    .getOrCreate()
+)
+spark.sparkContext.setLogLevel("WARN")
+
+print("Master:", spark.sparkContext.master)
+print("App:", spark.sparkContext.appName)
+print("Spark:", spark.version)
+print("shuffle.partitions:", spark.conf.get("spark.sql.shuffle.partitions"))
+#%% md
+## 3. Чтение основной таблицы и схема
+Сначала читаем без схемы (все поля — `string`), чтобы посмотреть структуру.
+#%% code
+SRC = Path("archive")
+
+sales_raw = (
+    spark.read
+    .option("header", True)
+    .option("sep", "\t")
+    .option("encoding", "UTF-8")
+    .csv(str(SRC / "Продажи.csv"))
+)
+
+print("Строк:", sales_raw.count())
+print("Столбцов:", len(sales_raw.columns))
+print(sales_raw.columns)
+sales_raw.printSchema()
+#%% md
+### Явная схема (StructType) и сравнение с `inferSchema`
+Числа записаны с десятичной запятой (`113,33`), поэтому `inferSchema` не распознает их как числа. Задаём явную схему с латинскими именами полей: числа с запятой читаем как `string` и приводим позже; целые (`Количество`, суммы без копеек) тоже читаем строкой, чтобы не потерять строки с нестандартными значениями.
+#%% code
+from pyspark.sql.types import StructType, StructField, StringType
+
+sales_schema = StructType([
+    StructField("cost_price", StringType(), True),      # Себестоимость (за единицу)
+    StructField("purchase_date", StringType(), True),   # Дата покупки dd.MM.yyyy
+    StructField("receipt_no", StringType(), True),      # Номер чека
+    StructField("product_key", StringType(), True),
+    StructField("branch", StringType(), True),          # Филиал
+    StructField("quantity", StringType(), True),
+    StructField("amount", StringType(), True),          # Сумма покупки
+    StructField("discount", StringType(), True),        # Сумма скидки
+    StructField("client_id", StringType(), True),
+    StructField("vehicle", StringType(), True),         # Машина доставки
+    StructField("address", StringType(), True),         # Адрес доставки
+])
+
+sales = (
+    spark.read
+    .option("header", True)          # заголовок пропускается, имена берутся из схемы
+    .option("sep", "\t")
+    .option("nullValue", "NULL")     # строка NULL -> настоящий null
+    .schema(sales_schema)
+    .csv(str(SRC / "Продажи.csv"))
+)
+
+# Сравнение: автоматический вывод типов
+sales_infer = (
+    spark.read.option("header", True).option("sep", "\t")
+    .option("nullValue", "NULL").option("inferSchema", True)
+    .csv(str(SRC / "Продажи.csv"))
+)
+print("=== inferSchema ===")
+sales_infer.printSchema()
+print("=== явная схема ===")
+sales.printSchema()
+print("Строк:", sales.count())
+#%% md
+**Вывод.** Даже с `nullValue="NULL"` `inferSchema` распознал числом только `Количество`: `Себестоимость`, `Сумма покупки`, `Сумма скидки` (десятичная запятая) и даты остались `string`; кроме того, он требует дополнительного прохода по 865 тыс. строк, а без `nullValue` маркер `NULL` превратил бы в `string` и числовые поля. Явная схема даёт воспроизводимый контракт, а типы приводятся осознанно.
+#%% md
+## 4. Transformations
+Создаём типизированный DataFrame и вычисляемые признаки:
+* `purchase_date` → `date`, `month`;
+* числа с запятой → `double`;
+* `net_amount = amount − discount` (выручка после скидки), `discount_pct`;
+* `cost_total = cost_price × quantity`, `margin = net_amount − cost_total`;
+* `is_delivery` — есть ли адрес доставки;
+* `product_group_l1` — корневая ветка иерархии группы (добавим после JOIN).
+
+> Допущение: поле «Себестоимость» — за единицу товара, «Сумма покупки» — сумма по строке до скидки.
+#%% code
+def to_num(col):
+    """'113,33' -> 113.33 (десятичная запятая)"""
+    return F.regexp_replace(F.trim(F.col(col)), ",", ".").cast("double")
+
+sales_t = (
+    sales
+    .withColumn("purchase_date", F.to_date("purchase_date", "dd.MM.yyyy"))
+    .withColumn("month", F.date_format("purchase_date", "yyyy-MM"))
+    .withColumn("branch", F.trim("branch"))
+    .withColumn("cost_price", to_num("cost_price"))
+    .withColumn("quantity", to_num("quantity"))
+    .withColumn("amount", to_num("amount"))
+    .withColumn("discount", to_num("discount"))
+    .withColumn("net_amount", F.col("amount") - F.col("discount"))
+    .withColumn("discount_pct", F.when(F.col("amount") > 0, F.col("discount") / F.col("amount") * 100))
+    .withColumn("cost_total", F.col("cost_price") * F.col("quantity"))
+    .withColumn("margin", F.col("net_amount") - F.col("cost_total"))
+    .withColumn("is_delivery", F.col("address").isNotNull())
+    .drop("vehicle")
+)
+
+sales_t.printSchema()
+sales_t.select("purchase_date", "branch", "quantity", "amount", "discount", "net_amount",
+               "cost_total", "margin", "is_delivery").show(5, truncate=False)
+
+# проверка разбора дат и диапазона
+sales_t.agg(
+    F.min("purchase_date").alias("first_date"),
+    F.max("purchase_date").alias("last_date"),
+    F.sum(F.col("purchase_date").isNull().cast("int")).alias("bad_dates"),
+    F.sum((F.col("quantity") <= 0).cast("int")).alias("qty_le_0"),
+    F.sum((F.col("amount") < 0).cast("int")).alias("amount_lt_0"),
+    F.sum((F.col("margin") < 0).cast("int")).alias("margin_lt_0"),
+    F.sum(F.col("margin").isNotNull().cast("int")).alias("margin_known"),
+).show()
+#%% md
+**Вывод.** Использованы `withColumn`, `select`, `drop`, `filter` (далее), `to_date`, `regexp_replace`, `cast`, `when` — более пяти разных transformations. Все даты разобраны (`bad_dates = 0`), возвратов (`quantity ≤ 0`) и отрицательных сумм нет. Около 13 % строк с известной маржей (`margin_lt_0` ≈ 103,5 тыс. из 778,7 тыс.) имеют отрицательную маржу: это либо продажи ниже себестоимости (акции, уценка), либо неточность допущения о смысле поля «Себестоимость»; это ограничение расчёта маржи (см. итоговые выводы).
+#%% md
+## 5. Качество данных: пропуски
+Считаем пропуски во всех полях, затем объясняем предметный смысл каждого.
+#%% code
+null_counts = sales_t.select([
+    F.sum(F.col(c).isNull().cast("int")).alias(c)
+    for c in ["cost_price", "receipt_no", "quantity", "address", "purchase_date", "amount"]
+])
+null_counts.show(vertical=True)
+
+# Предметная диагностика: пропуск адреса — признак самовывоза, а не ошибка
+sales_t.groupBy("branch").agg(
+    F.count("*").alias("rows"),
+    F.sum(F.col("address").isNull().cast("int")).alias("no_address"),
+    F.sum(F.col("cost_price").isNull().cast("int")).alias("no_cost"),
+    F.sum(F.col("receipt_no").isNull().cast("int")).alias("no_receipt"),
+    F.sum(F.col("quantity").isNull().cast("int")).alias("no_qty"),
+).orderBy(F.desc("rows")).show(truncate=False)
+
+# Что происходит со строками без количества?
+sales_t.filter(F.col("quantity").isNull()).select(
+    "branch", "receipt_no", "cost_price", "amount", "discount"
+).show(5, truncate=False)
+#%% md
+Решения по пропускам:
+
+| Поле | Смысл пропуска | Решение |
+|---|---|---|
+| `address` | нет доставки (самовывоз/розница) | **не удалять**; порождает признак `is_delivery` |
+| `receipt_no` | продажи без чека (оптовые отгрузки, РС) | **заполнить** маркером `NO_RECEIPT` — категориальный идентификатор, числа не выдумываем |
+| `cost_price` | себестоимость неизвестна | **не заполнять** нулём (исказило бы маржу); маржа считается только по строкам с известной себестоимостью через `filter(cost_price IS NOT NULL)` |
+| `quantity` | количество не указано | **не заполнять**; строки остаются в выручке (`amount` известна), исключаются только из расчётов, зависящих от количества |
+#%% code
+sales_c = sales_t.fillna({"receipt_no": "NO_RECEIPT"})
+
+with_cost = sales_c.filter(F.col("cost_price").isNotNull() & F.col("quantity").isNotNull())
+print("Всего строк:", sales_c.count())
+print("Строк с известной себестоимостью и количеством:", with_cost.count())
+#%% md
+**Вывод.** Пропуски структурно связаны с процессом (самовывоз, розница без чека, отсутствие учёта себестоимости) — удалять строки из-за `null` было бы ошибкой. Для маржи используется явный фильтр, для чека — метка, для количества/себестоимости — без выдуманных значений.
+#%% md
+## 6. Агрегации
+### 6.1. Показатели по филиалам (6 агрегатов)
+#%% code
+branch_stats = (
+    sales_c
+    .groupBy("branch")
+    .agg(
+        F.count("*").alias("lines"),
+        F.countDistinct("receipt_no").alias("receipts"),
+        F.countDistinct("client_id").alias("clients"),
+        F.round(F.sum("amount"), 0).alias("gross"),
+        F.round(F.sum("discount"), 0).alias("discounts"),
+        F.round(F.sum("net_amount"), 0).alias("net_revenue"),
+        F.round(F.avg("discount_pct"), 2).alias("avg_discount_pct"),
+    )
+    .orderBy(F.desc("net_revenue"))
+)
+branch_stats.show(truncate=False)
+#%% md
+### 6.2. Динамика по месяцам
+#%% code
+month_stats = (
+    sales_c
+    .groupBy("month")
+    .agg(
+        F.count("*").alias("lines"),
+        F.round(F.sum("net_amount"), 0).alias("net_revenue"),
+        F.round(F.sum(F.when(F.col("is_delivery"), F.col("net_amount")).otherwise(0)), 0).alias("delivery_revenue"),
+    )
+    .orderBy("month")
+)
+month_stats.show(30, truncate=False)
+#%% md
+**Вывод.** Практически всю выручку дают три торговых зала: крупнейший ТЗ‑2 (≈58 млн после скидок), затем ТЗ‑1 (≈43 млн) и ТЗ‑3 (≈26 млн); кафе, багетная мастерская и распределительный склад малы. Средняя скидка невелика (0–3,6 %). Выручка резко растёт со второй половины 2021 г., а 2020‑06 — неполный первый месяц данных.
+#%% md
+## 7. Соединения (JOIN)
+### 7.1. Справочник товаров (LEFT JOIN)
+Справочники читаем с явной схемой. Проверяем уникальность ключей до соединения, иначе JOIN размножит факты.
+#%% code
+products_schema = StructType([
+    StructField("product_key", StringType(), True),
+    StructField("product_name", StringType(), True),
+    StructField("brand", StringType(), True),
+    StructField("product_group", StringType(), True),
+])
+clients_schema = StructType([
+    StructField("client_id", StringType(), True),
+    StructField("client_name", StringType(), True),
+    StructField("contractor_name", StringType(), True),
+])
+
+products = (spark.read.option("header", True).option("sep", "\t")
+            .schema(products_schema).csv(str(SRC / "Продукты.csv")))
+clients_raw = (spark.read.option("header", True).option("sep", "\t")
+               .schema(clients_schema).csv(str(SRC / "Клиенты.csv")))
+
+print("products:", products.count(), "уникальных ключей:", products.select("product_key").distinct().count())
+print("clients :", clients_raw.count(), "уникальных ключей:", clients_raw.select("client_id").distinct().count())
+#%% md
+В справочнике клиентов ключ `client_id` **не уникален** (один клиент может встречаться с несколькими «юрлицами»). Прямой JOIN размножил бы строки продаж. Оставляем одну запись на клиента (первую по `contractor_name`) — так связь становится «многие-к-одному».
+#%% code
+clients_dupes = (clients_raw.groupBy("client_id").count().filter("count > 1"))
+print("Клиентов с дублями:", clients_dupes.count())
+
+clients = (
+    clients_raw
+    .groupBy("client_id")
+    .agg(F.min("client_name").alias("client_name"))
+)
+print("clients после дедупликации:", clients.count())
+
+n_before = sales_c.count()
+
+sales_p = (
+    sales_c.alias("s")
+    .join(products.alias("p"), F.col("s.product_key") == F.col("p.product_key"), "left")
+    .select("s.*", "p.product_name", "p.brand", "p.product_group")
+    .withColumn("brand", F.coalesce("brand", F.lit("unknown")))
+    .withColumn("group_l1", F.split("product_group", "-").getItem(0))
+)
+print("LEFT JOIN с товарами  до:", n_before, " после:", sales_p.count())
+print("Строк без товара в справочнике:", sales_p.filter(F.col("product_name").isNull()).count())
+#%% md
+### 7.2. Клиенты (INNER JOIN) и сравнение с LEFT JOIN
+#%% code
+sales_full_inner = (
+    sales_p.alias("s")
+    .join(clients.alias("c"), F.col("s.client_id") == F.col("c.client_id"), "inner")
+    .select("s.*", "c.client_name")
+)
+sales_full_left = (
+    sales_p.alias("s")
+    .join(clients.alias("c"), F.col("s.client_id") == F.col("c.client_id"), "left")
+    .select("s.*", "c.client_name")
+)
+print("до JOIN        :", sales_p.count())
+print("INNER JOIN     :", sales_full_inner.count())
+print("LEFT JOIN      :", sales_full_left.count())
+print("LEFT без клиента:", sales_full_left.filter(F.col("client_name").isNull()).count())
+
+# итоговая витрина — LEFT, чтобы не терять факты
+sales_full = sales_full_left
+#%% md
+**Вывод.** Для фактовой витрины выбран LEFT JOIN: он сохраняет все продажи и позволяет измерить неполноту справочников. INNER JOIN здесь даёт тот же результат, потому что все ключи находятся в справочниках (проверено выше), и он допустим как контроль целостности. Дедупликация справочника клиентов предотвратила размножение строк.
+#%% md
+## 8. Spark SQL
+#%% code
+sales_full.createOrReplaceTempView("sales_full")
+
+# Запрос 1: топ товарных групп по чистой выручке (GROUP BY + сортировка по агрегату)
+top_groups = spark.sql("""
+SELECT
+    group_l1,
+    COUNT(*)                          AS lines,
+    COUNT(DISTINCT client_id)         AS clients,
+    ROUND(SUM(net_amount), 0)         AS net_revenue,
+    ROUND(SUM(discount) / SUM(amount) * 100, 2) AS discount_pct
+FROM sales_full
+GROUP BY group_l1
+ORDER BY net_revenue DESC
+LIMIT 10
+""")
+top_groups.show(truncate=False)
+
+# Запрос 2: топ клиентов и доля доставки
+top_clients = spark.sql("""
+SELECT
+    client_id,
+    client_name,
+    COUNT(*)                                   AS lines,
+    ROUND(SUM(net_amount), 0)                  AS net_revenue,
+    ROUND(SUM(CASE WHEN is_delivery THEN net_amount ELSE 0 END) / SUM(net_amount) * 100, 1) AS delivery_share_pct
+FROM sales_full
+GROUP BY client_id, client_name
+HAVING SUM(net_amount) > 0
+ORDER BY net_revenue DESC
+LIMIT 10
+""")
+top_clients.show(truncate=False)
+
+# Запрос 3: маржа по бренду только для строк с известной себестоимостью
+top_brands = spark.sql("""
+SELECT
+    brand,
+    COUNT(*)                   AS lines,
+    ROUND(SUM(net_amount), 0)  AS net_revenue,
+    ROUND(SUM(margin), 0)      AS margin,
+    ROUND(SUM(margin) / SUM(net_amount) * 100, 1) AS margin_pct
+FROM sales_full
+WHERE cost_price IS NOT NULL AND quantity IS NOT NULL AND net_amount > 0
+GROUP BY brand
+HAVING COUNT(*) >= 500
+ORDER BY margin DESC
+LIMIT 10
+""")
+top_brands.show(truncate=False)
+#%% md
+**Эквивалент через DataFrame API** (проверка совпадения результатов SQL и API):
+#%% code
+top_groups_api = (
+    sales_full.groupBy("group_l1")
+    .agg(
+        F.count("*").alias("lines"),
+        F.countDistinct("client_id").alias("clients"),
+        F.round(F.sum("net_amount"), 0).alias("net_revenue"),
+        F.round(F.sum("discount") / F.sum("amount") * 100, 2).alias("discount_pct"),
+    )
+    .orderBy(F.desc("net_revenue"))
+    .limit(10)
+)
+print("SQL == DataFrame API:", top_groups.collect() == top_groups_api.collect())
+#%% md
+**Вывод.** SQL и DataFrame API дают одинаковый результат. Запросы ранжируют товарные группы, клиентов и бренды; рейтинг по марже считается только по строкам с известной себестоимостью.
+#%% md
+## 9. Итоговая витрина и экспорт
+Витрина: выручка, скидки и маржа по связке «месяц × филиал × товарная группа верхнего уровня».
+#%% code
+mart = (
+    sales_full
+    .groupBy("month", "branch", "group_l1")
+    .agg(
+        F.count("*").alias("lines"),
+        F.round(F.sum("quantity"), 2).alias("qty"),
+        F.round(F.sum("amount"), 2).alias("gross"),
+        F.round(F.sum("discount"), 2).alias("discount"),
+        F.round(F.sum("net_amount"), 2).alias("net_revenue"),
+        F.round(F.sum("margin"), 2).alias("margin_known"),
+    )
+    .orderBy("month", "branch", F.desc("net_revenue"))
+)
+mart_rows = mart.count()
+print("Строк в витрине:", mart_rows)
+mart.printSchema()
+
+OUT = Path("spark_output")
+OUT.mkdir(exist_ok=True)
+
+mart.write.mode("overwrite").parquet(str(OUT / "own_sales_mart_parquet"))
+
+# небольшой агрегат — дополнительно CSV одним файлом
+(
+    branch_stats
+    .coalesce(1)
+    .write.mode("overwrite")
+    .option("header", True)
+    .csv(str(OUT / "own_branch_stats_csv"))
+)
+print(sorted(p.name for p in (OUT / "own_branch_stats_csv").iterdir() if not p.name.startswith(".")))
+#%% md
+### Повторное чтение Parquet (round-trip)
+#%% code
+mart_back = spark.read.parquet(str(OUT / "own_sales_mart_parquet"))
+
+print("Строк до записи :", mart_rows)
+print("Строк после чтения:", mart_back.count())
+same = [(f.name, f.dataType) for f in mart.schema] == [(f.name, f.dataType) for f in mart_back.schema]
+print("Имена и типы столбцов совпадают:", same, "(Parquet делает все поля nullable)")
+mart_back.printSchema()
+
+# контрольные суммы
+a = mart.agg(F.sum("net_revenue")).first()[0]
+b = mart_back.agg(F.sum("net_revenue")).first()[0]
+print("Сумма net_revenue до/после:", a, b, "равны:", abs(a - b) < 1e-6)
+#%% md
+Завершаем сессию (последняя ячейка pipeline).
+#%% code
+spark.stop()
+#%% md
+## 10. Итоговые выводы
+1. **Структура продаж.** Розничный покупатель «Частное лицо» (`CL_25101`) даёт ≈96 % строк и ≈102 млн из ≈129 млн чистой выручки; остальные клиенты — юрлица с доставкой (доля доставки у них 100 %).
+2. **Филиалы.** Три торговых зала формируют почти всю выручку; ТЗ‑2 крупнейший (≈58 млн), но у ТЗ‑1 самая высокая средняя скидка (1,35 %) и больше всего клиентов-юрлиц (1 469).
+3. **Динамика.** Выручка растёт: с ≈2–3 млн в месяц в 2020 — первой половине 2021 до ≈17–22 млн в сентябре—декабре 2021; доля выручки с доставкой в конце 2021 г. около 20–27 %.
+4. **Товары.** Крупнейшая корневая группа — «Живопись» (≈25 млн, скидка 2,0 %), далее «Графические материалы» и «ДПИ»; наибольшая маржа по брендам — у издательства АСТ и «Передвижника».
+5. **Качество данных.** Пропуски структурны: адрес отсутствует при самовывозе, чек — у оптовых/мастерских отгрузок, себестоимость неизвестна у ≈10 % строк. Справочник клиентов содержал 566 дублирующихся ключей — без дедупликации JOIN размножил бы факты; после неё число строк сохранилось (865 222 до и после LEFT/INNER JOIN).
+6. **Spark.** SQL и DataFrame API дали одинаковые результаты; витрина (1 780 строк) записана в Parquet и прочитана обратно без потери строк и суммы.
+
+**Ограничения анализа.**
+* Расчёт маржи опирается на допущение, что `Себестоимость` — за единицу товара; у ≈13 % строк с известной себестоимостью маржа отрицательна (продажа ниже себестоимости либо неверное допущение), а у ≈10 % строк себестоимость неизвестна вовсе, поэтому маржа ориентировочная.
+* Данные охватывают неполный период (с 2020‑06, основная масса — с 2021‑07), а розничный клиент агрегирован в одну запись, поэтому нельзя судить о поведении отдельных покупателей; результаты описывают выборку и не доказывают причинных связей.

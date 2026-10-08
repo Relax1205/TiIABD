@@ -1,0 +1,18 @@
+# Файлы > 100 МБ (лимит GitHub) — хранятся в репозитории как ZIP рядом с оригиналом
+ecommerce.sqlite
+transactions.csv
+
+# Временный профиль браузера, создаётся при экспорте HTML -> PDF
+_edge_profile_tmp/
+
+# Окружения и служебные файлы
+.venv/
+venv/
+__pycache__/
+.ipynb_checkpoints/
+spark-warehouse/
+metastore_db/
+derby.log
+
+# Промежуточные данные ПР5 (блокнот создаёт их заново при запуске)
+practice5_data/

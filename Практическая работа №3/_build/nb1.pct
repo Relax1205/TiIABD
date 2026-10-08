@@ -1,0 +1,374 @@
+#%% md
+# Практическая работа №3. Распределённая модель обработки данных (Apache Spark)
+
+Учебная последовательность на базе `ecommerce.sqlite`. Ноутбук выполняется целиком (Restart & Run All).
+#%% md
+## 3.1. Окружение
+Фиксируем версии Python, Java и PySpark.
+#%% code
+import sys, subprocess, pyspark
+print("Python :", sys.version.split()[0])
+print("PySpark:", pyspark.__version__)
+print(subprocess.run(["java", "-version"], capture_output=True, text=True).stderr.splitlines()[0])
+#%% md
+## 3.2. Извлечение таблиц SQLite в staging-каталог
+Spark не читает SQLite напрямую (без JDBC-драйвера), поэтому таблицы выгружаются в CSV через `sqlite3` + pandas.
+#%% code
+from pathlib import Path
+import sqlite3
+import pandas as pd
+
+DB_PATH = Path("ecommerce.sqlite")
+STAGING = Path("spark_input")
+STAGING.mkdir(exist_ok=True)
+
+TABLES = [
+    "orders",
+    "order_items",
+    "products",
+    "customers",
+    "order_payments",
+    "order_reviews",
+    "product_category_name_translation",
+]
+
+with sqlite3.connect(DB_PATH) as conn:
+    for table in TABLES:
+        part = pd.read_sql_query(f'SELECT * FROM "{table}"', conn)
+        part.to_csv(STAGING / f"{table}.csv", index=False, encoding="utf-8")
+        print(f"{table:36s} {len(part):>8} rows")
+#%% md
+**Вывод.** Выгружено 7 таблиц транзакционного контура; крупнейшая — `order_items` (112 650 строк). Staging отделяет слой источника от слоя распределённой обработки.
+#%% md
+## 4. Запуск локального Spark
+#%% code
+import os
+# Windows: для записи файлов Spark нужен winutils.exe/hadoop.dll (лежат в ./hadoop/bin)
+if os.name == "nt" and Path("hadoop/bin/winutils.exe").exists():
+    os.environ["HADOOP_HOME"] = str(Path("hadoop").resolve())
+    os.environ["PATH"] += os.pathsep + str(Path("hadoop/bin").resolve())
+
+from pyspark.sql import SparkSession
+from pyspark.sql import functions as F
+
+spark = (
+    SparkSession.builder
+    .appName("Practice4_Ecommerce")
+    .master("local[*]")
+    .config("spark.driver.memory", "2g")
+    .config("spark.sql.shuffle.partitions", "8")
+    .getOrCreate()
+)
+
+spark.sparkContext.setLogLevel("WARN")
+
+print("Master:", spark.sparkContext.master)
+print("App:", spark.sparkContext.appName)
+print("Spark:", spark.version)
+#%% md
+**Вывод.** Сессия работает в режиме `local[*]`: Driver и Executor эмулируются внутри одного JVM-процесса, но модель (разделы, ленивый план, задачи) сохраняется.
+#%% md
+## 5. Чтение данных и схема
+### 5.1. `orders` без вывода типов
+#%% code
+orders_raw = (
+    spark.read
+    .option("header", True)
+    .option("encoding", "UTF-8")
+    .csv(str(STAGING / "orders.csv"))
+)
+
+orders_raw.printSchema()
+print("Строк:", orders_raw.count())
+
+orders_raw.select(
+    "order_id", "customer_id", "order_status", "order_purchase_timestamp"
+).show(5, truncate=False)
+#%% md
+### 5.2. Явная схема для `order_items`
+#%% code
+from pyspark.sql.types import (
+    StructType, StructField, StringType, IntegerType, DoubleType
+)
+
+order_items_schema = StructType([
+    StructField("order_id", StringType(), True),
+    StructField("order_item_id", IntegerType(), True),
+    StructField("product_id", StringType(), True),
+    StructField("seller_id", StringType(), True),
+    StructField("shipping_limit_date", StringType(), True),
+    StructField("price", DoubleType(), True),
+    StructField("freight_value", DoubleType(), True),
+])
+
+items = (
+    spark.read
+    .option("header", True)
+    .schema(order_items_schema)
+    .csv(str(STAGING / "order_items.csv"))
+)
+
+items.printSchema()
+print("Строк:", items.count())
+#%% md
+### 5.3. Временные поля `orders`
+#%% code
+timestamp_cols = [
+    "order_purchase_timestamp",
+    "order_approved_at",
+    "order_delivered_carrier_date",
+    "order_delivered_customer_date",
+    "order_estimated_delivery_date",
+]
+
+orders = orders_raw
+for c in timestamp_cols:
+    orders = orders.withColumn(c, F.to_timestamp(F.col(c), "yyyy-MM-dd HH:mm:ss"))
+
+orders.printSchema()
+#%% md
+**Вывод.** Без схемы все поля CSV — `string`; идентификаторы так и остаются, а даты приводятся к `timestamp`, чтобы работали `datediff`, `date_format` и т. п. Явная схема фиксирует контракт входных данных и не требует прохода для вывода типов.
+#%% md
+## 6. Основные преобразования
+### 6.1. Фильтрация и вычисляемый признак
+#%% code
+expensive_items = (
+    items
+    .filter(F.col("price") >= 500)
+    .withColumn("gross_item_value", F.round(F.col("price") + F.col("freight_value"), 2))
+    .select("order_id", "order_item_id", "price", "freight_value", "gross_item_value")
+)
+
+print("Позиций с price >= 500:", expensive_items.count())
+
+expensive_items.orderBy(F.desc("gross_item_value")).show(5, truncate=False)
+#%% md
+### 6.2. Временные преобразования заказов
+#%% code
+delivered = (
+    orders
+    .filter(F.col("order_status") == "delivered")
+    .withColumn("purchase_month", F.date_format("order_purchase_timestamp", "yyyy-MM"))
+    .withColumn(
+        "delivery_days",
+        F.datediff("order_delivered_customer_date", "order_purchase_timestamp")
+    )
+    .withColumn(
+        "is_late",
+        F.col("order_delivered_customer_date") > F.col("order_estimated_delivery_date")
+    )
+)
+
+with_delivery_date = delivered.filter(F.col("order_delivered_customer_date").isNotNull())
+late = with_delivery_date.filter(F.col("is_late"))
+
+print("Доставленных заказов:", delivered.count())
+print("С известной датой доставки:", with_delivery_date.count())
+print("Позже ожидаемой даты:", late.count())
+#%% md
+**Вывод.** `gross_item_value` — признак уровня позиции, а не заказа. Просрочены около 8,1 % доставленных заказов с известной датой; `isNotNull()` нужен, чтобы отделить отсутствие даты от просрочки.
+#%% md
+## 7. Пропуски и типы
+### 7.1. Пропуски во временных полях
+#%% code
+null_counts = orders.select([
+    F.sum(F.col(c).isNull().cast("int")).alias(c) for c in timestamp_cols
+])
+null_counts.show(vertical=True)
+#%% md
+### 7.2. Пропуски по статусам
+#%% code
+missing_delivery_by_status = (
+    orders
+    .filter(F.col("order_delivered_customer_date").isNull())
+    .groupBy("order_status")
+    .count()
+    .orderBy(F.desc("count"))
+)
+missing_delivery_by_status.show(truncate=False)
+#%% md
+### 7.3. Заполнение категориального пропуска
+#%% code
+products = (
+    spark.read
+    .option("header", True)
+    .option("inferSchema", True)
+    .csv(str(STAGING / "products.csv"))
+)
+
+missing_categories = products.filter(F.col("product_category_name").isNull()).count()
+products_clean = products.fillna({"product_category_name": "unknown"})
+
+print("Товаров без категории:", missing_categories)
+#%% md
+**Вывод.** Пропуск даты доставки почти целиком объясняется статусом (shipped, canceled, unavailable и т. д.) — это признак незавершённого процесса, а не потеря данных, поэтому строки не удаляются. Для категории товара используется явная метка `unknown`, чтобы не терять позиции при JOIN.
+#%% md
+## 8. Агрегации
+### 8.1. Заказы по статусам
+#%% code
+status_stats = orders.groupBy("order_status").count().orderBy(F.desc("count"))
+status_stats.show(truncate=False)
+#%% md
+### 8.2. Несколько агрегатов по способам оплаты
+#%% code
+payments = (
+    spark.read
+    .option("header", True)
+    .option("inferSchema", True)
+    .csv(str(STAGING / "order_payments.csv"))
+)
+
+payment_stats = (
+    payments
+    .groupBy("payment_type")
+    .agg(
+        F.count("*").alias("payments"),
+        F.round(F.sum("payment_value"), 2).alias("total_value"),
+        F.round(F.avg("payment_value"), 2).alias("avg_value")
+    )
+    .orderBy(F.desc("total_value"))
+)
+
+payment_stats.show(truncate=False)
+#%% md
+**Вывод.** Доминирует статус `delivered`, поэтому статистика доставки описывает в основном завершённые заказы. По платежам лидирует `credit_card`; одна покупка может иметь несколько платёжных строк, поэтому `COUNT(*)` ≠ число заказов.
+#%% md
+## 9. Соединения
+### 9.1. Позиции + товары + перевод категорий (LEFT JOIN)
+#%% code
+translations = (
+    spark.read
+    .option("header", True)
+    .csv(str(STAGING / "product_category_name_translation.csv"))
+)
+
+sales = (
+    items.alias("i")
+    .join(
+        products_clean.select("product_id", "product_category_name").alias("p"),
+        F.col("i.product_id") == F.col("p.product_id"),
+        "left"
+    )
+    .join(
+        translations.alias("t"),
+        F.col("p.product_category_name") == F.col("t.product_category_name"),
+        "left"
+    )
+    .select(
+        F.col("i.order_id").alias("order_id"),
+        F.col("i.order_item_id").alias("order_item_id"),
+        F.col("i.product_id").alias("product_id"),
+        F.col("i.price").alias("price"),
+        F.col("i.freight_value").alias("freight_value"),
+        F.coalesce(
+            F.col("t.product_category_name_english"),
+            F.col("p.product_category_name"),
+            F.lit("unknown")
+        ).alias("category")
+    )
+)
+
+print("Строк до JOIN:", items.count())
+print("Строк после JOIN:", sales.count())
+print("Позиций категории unknown:", sales.filter(F.col("category") == "unknown").count())
+#%% md
+### 9.2. Просрочка по штатам
+#%% code
+customers = (
+    spark.read
+    .option("header", True)
+    .option("inferSchema", True)
+    .csv(str(STAGING / "customers.csv"))
+)
+
+late_by_state = (
+    delivered
+    .join(customers.select("customer_id", "customer_state"), on="customer_id", how="left")
+    .filter(F.col("order_delivered_customer_date").isNotNull())
+    .groupBy("customer_state")
+    .agg(
+        F.count("*").alias("delivered"),
+        F.sum(F.when(F.col("is_late"), 1).otherwise(0)).alias("late")
+    )
+    .withColumn("late_pct", F.round(F.col("late") / F.col("delivered") * 100, 2))
+    .orderBy(F.desc("late_pct"))
+)
+
+late_by_state.show(10, truncate=False)
+#%% md
+**Вывод.** LEFT JOIN сохранил все 112 650 позиций (число строк до и после совпадает — связь «многие-к-одному» не размножает факты). Доля просрочки по штатам максимальна у AL, но при малой выборке; результат описывает данные, а не доказывает причинность.
+#%% md
+## 10. Spark SQL
+### 10.1. Выручка по категориям через SQL
+#%% code
+sales.createOrReplaceTempView("sales")
+
+category_sql = spark.sql("""
+SELECT
+    category,
+    COUNT(*) AS items,
+    COUNT(DISTINCT order_id) AS orders,
+    ROUND(SUM(price), 2) AS revenue,
+    ROUND(AVG(price), 2) AS avg_price
+FROM sales
+GROUP BY category
+ORDER BY revenue DESC
+LIMIT 10
+""")
+
+category_sql.show(truncate=False)
+#%% md
+### 10.2. Эквивалент через DataFrame API
+#%% code
+category_sales = (
+    sales
+    .groupBy("category")
+    .agg(
+        F.count("*").alias("items"),
+        F.countDistinct("order_id").alias("orders"),
+        F.round(F.sum("price"), 2).alias("revenue"),
+        F.round(F.avg("price"), 2).alias("avg_price")
+    )
+)
+
+print("Категорий в витрине:", category_sales.count())
+category_sales.orderBy(F.desc("revenue")).show(10, truncate=False)
+#%% md
+**Вывод.** SQL и DataFrame API дают одинаковый результат: оба компилируются одним оптимизатором Spark SQL. `COUNT(DISTINCT order_id)` ≠ `COUNT(*)`, так как заказ может включать несколько позиций. Суммируется `price` без доставки — это не полная платёжная выручка.
+#%% md
+## 11. Запись результата
+#%% code
+OUT = Path("spark_output")
+OUT.mkdir(exist_ok=True)
+
+category_sales.write.mode("overwrite").parquet(str(OUT / "category_sales_parquet"))
+
+(
+    category_sales
+    .coalesce(1)
+    .write
+    .mode("overwrite")
+    .option("header", True)
+    .csv(str(OUT / "category_sales_csv"))
+)
+
+category_back = spark.read.parquet(str(OUT / "category_sales_parquet"))
+
+print("Строк после round-trip:", category_back.count())
+category_back.printSchema()
+print(sorted(p.name for p in (OUT / "category_sales_csv").iterdir()))
+#%% md
+**Вывод.** Spark пишет каталог с part-файлами (по одному на раздел). Parquet хранит схему и типы; `coalesce(1)` допустим только для маленькой витрины (74 строки).
+#%% md
+## 11.2. Завершение сессии
+#%% code
+spark.stop()
+#%% md
+## Итоговые выводы
+1. Локальный Spark воспроизводит программную модель кластера (DataFrame, ленивый план, разделы).
+2. Явная схема надёжнее `inferSchema` для воспроизводимого пайплайна.
+3. Пропуски (`null`) в датах доставки объясняются статусом заказа, поэтому их нельзя удалять механически.
+4. LEFT JOIN с `coalesce` сохраняет все факты и позволяет измерить неполноту справочника.
+5. SQL и DataFrame API эквивалентны; Parquet предпочтителен для дальнейшей аналитики.
+
+**Ограничения:** анализ описывает конкретную выборку (нет причинных выводов); `price` не равен полной выручке (не учтены доставка и платежи).
