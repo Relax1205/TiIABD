@@ -1,0 +1,11 @@
+{
+  "seed": 42,
+  "task": "регрессия Listening_Time_minutes",
+  "model": "Градиентный бустинг (GBT)",
+  "hyperparameters": "{'maxDepth': 3, 'maxIter': 100}",
+  "split": "группы (podcast, episode), SHA-256 + seed, 60/20/20, после удаления полных дублей",
+  "baseline_share": 0.7138908059435125,
+  "test_rmse": 13.73562227131814,
+  "test_mae": 10.189957807985087,
+  "spark_version": "3.5.3"
+}

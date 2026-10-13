@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.feature.ImputerModel","timestamp":1791905927696,"sparkVersion":"3.5.3","uid":"Imputer_3508671eed7b","paramMap":{"strategy":"median","inputCols":["length","guest_pop"],"outputCols":["length_imp","guest_imp"]},"defaultParamMap":{"strategy":"mean","relativeError":0.001,"outputCol":"Imputer_3508671eed7b__output","missingValue":"NaN"}}

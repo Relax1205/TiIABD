@@ -1,0 +1,10 @@
+{
+  "seed": 42,
+  "classification_model": "Случайный лес",
+  "classification_threshold": 0.538382750703671,
+  "classification_features_note": "PageValues включён: прогноз по накопленному состоянию сессии",
+  "regression_model": "Случайный лес",
+  "regression_scope": "только часы Functioning Day = Yes; погода — фактическая за час",
+  "kmeans_k": 3,
+  "spark_version": "3.5.3"
+}

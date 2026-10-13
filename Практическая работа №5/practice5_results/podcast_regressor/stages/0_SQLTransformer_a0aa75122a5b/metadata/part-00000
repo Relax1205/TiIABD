@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.feature.SQLTransformer","timestamp":1791905927394,"sparkVersion":"3.5.3","uid":"SQLTransformer_a0aa75122a5b","paramMap":{"statement":"SELECT *, CAST(length IS NULL AS DOUBLE) AS length_missing, CAST(guest_pop IS NULL AS DOUBLE) AS guest_missing FROM __THIS__"},"defaultParamMap":{}}
