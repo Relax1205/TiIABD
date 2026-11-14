@@ -1,0 +1,53 @@
+{
+  "variant": 1,
+  "original_classes": [
+    0,
+    1,
+    8
+  ],
+  "class_names": [
+    "Самолёт",
+    "Автомобиль",
+    "Корабль"
+  ],
+  "seed": 42,
+  "split_sizes": {
+    "train": 4500,
+    "valid": 900,
+    "test": 900
+  },
+  "per_class": {
+    "train": 1500,
+    "valid": 300,
+    "test": 300
+  },
+  "image_shape": [
+    3,
+    28,
+    28
+  ],
+  "transform": "Resize 28x28, ToTensor, Normalize(mean=.5,std=.5) per channel",
+  "architecture": "Conv3-8-BN-ReLU-Pool2, Conv8-16-BN-ReLU-Pool2, Flatten, Linear784-3",
+  "parameters": 3771,
+  "optimizer": "Adam",
+  "lr": 0.001,
+  "batch_size": 128,
+  "epochs": 5,
+  "final_epoch": 5,
+  "environment": {
+    "python": "3.12.10",
+    "torch": "2.15.0+cpu",
+    "torchvision": "0.29.2+cpu",
+    "numpy": "2.5.4",
+    "device": "cpu",
+    "cpu_threads": 2,
+    "seed": 42
+  },
+  "test": {
+    "accuracy": 0.7744444444444445,
+    "macro_f1": 0.7746268504057009,
+    "test_size": 900,
+    "parameters": 3771
+  },
+  "reload_logits_match": true
+}

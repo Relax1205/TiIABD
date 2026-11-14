@@ -1,0 +1,66 @@
+{
+  "author": "Chekhov",
+  "source": "full train works",
+  "orders": [
+    1,
+    2
+  ],
+  "seeds": [
+    7,
+    42,
+    101
+  ],
+  "temperature": 1,
+  "max_tokens": 50,
+  "sentence_tokens": [
+    3,
+    150
+  ],
+  "backoff": "pair -> last token -> BOS",
+  "real_eos": {
+    "seed": 0,
+    "text": "— спешу в анастасьевку.",
+    "generated_tokens": 5,
+    "backoffs": 0,
+    "stopped_by": "eos"
+  },
+  "checks": {
+    "reproducible": true,
+    "boundaries": true,
+    "eos": true,
+    "max_tokens": true,
+    "backoff": true
+  },
+  "copy_checks": [
+    {
+      "order": 1,
+      "seed": 7,
+      "exact_train_sentence": false
+    },
+    {
+      "order": 1,
+      "seed": 42,
+      "exact_train_sentence": false
+    },
+    {
+      "order": 1,
+      "seed": 101,
+      "exact_train_sentence": false
+    },
+    {
+      "order": 2,
+      "seed": 7,
+      "exact_train_sentence": false
+    },
+    {
+      "order": 2,
+      "seed": 42,
+      "exact_train_sentence": false
+    },
+    {
+      "order": 2,
+      "seed": 101,
+      "exact_train_sentence": false
+    }
+  ]
+}

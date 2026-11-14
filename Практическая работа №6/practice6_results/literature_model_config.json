@@ -1,0 +1,61 @@
+{
+  "model": "NB_BOW",
+  "authors": [
+    "Chekhov",
+    "Gogol",
+    "Turgenev"
+  ],
+  "seed": 42,
+  "fragment_words": 300,
+  "stride": 300,
+  "train_cap_per_work": 50,
+  "split": "sha256(work_group), per-author 60/20/20; floor boundaries",
+  "token_pattern": "[а-яёa-z0-9]+(?:[-’'][а-яёa-z0-9]+)*|[!?]+|[()]{2,}",
+  "min_df": 3.0,
+  "max_vocab": 20000,
+  "fitted_vocab": 9185,
+  "reg_param": 0.001,
+  "spark_version": "3.5.3",
+  "python_version": "3.12.10",
+  "test": {
+    "selected_model": "NB_BOW",
+    "labels": [
+      "Chekhov",
+      "Gogol",
+      "Turgenev"
+    ],
+    "baseline_author": "Chekhov",
+    "fragment": {
+      "accuracy": 0.9030470914127424,
+      "macro_f1": 0.8902046667445248,
+      "weighted_f1": 0.9044110865666963,
+      "log_loss": 0.962465583435314
+    },
+    "work": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "weighted_f1": 1.0
+    },
+    "baseline_fragment": {
+      "accuracy": 0.32871652816251157,
+      "macro_f1": 0.16492934908501275,
+      "weighted_f1": 0.16264500906998489
+    },
+    "baseline_work": {
+      "accuracy": 0.75,
+      "macro_f1": 0.2857142857142857,
+      "weighted_f1": 0.6428571428571428
+    },
+    "test_work_support": [
+      15,
+      3,
+      2
+    ]
+  },
+  "coverage": {
+    "vocabulary": 9185,
+    "oov_fraction": 0.23857389955495917,
+    "zero_vectors": 0,
+    "mean_nnz": 144.8605724838412
+  }
+}

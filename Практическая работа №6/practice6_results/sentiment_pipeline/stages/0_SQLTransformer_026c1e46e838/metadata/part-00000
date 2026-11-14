@@ -1,0 +1,1 @@
+{"class":"org.apache.spark.ml.feature.SQLTransformer","timestamp":1793650594356,"sparkVersion":"3.5.3","uid":"SQLTransformer_026c1e46e838","paramMap":{"statement":"\n            SELECT *, lower(coalesce(text, '')) AS text_norm\n            FROM __THIS__\n        "},"defaultParamMap":{}}

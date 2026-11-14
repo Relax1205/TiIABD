@@ -1,0 +1,95 @@
+work_group,author,filename,body_chars,split,full_fragments,train_used
+Chekhov/Агафья,Chekhov,Агафья.txt,18874,train,10,10
+Chekhov/Альбом,Chekhov,Альбом.txt,3804,valid,1,0
+Chekhov/Анна на шее,Chekhov,Анна на шее.txt,24630,train,13,13
+Chekhov/Анюта,Chekhov,Анюта.txt,7396,train,3,3
+Chekhov/Аптекарша,Chekhov,Аптекарша.txt,9246,test,4,0
+Chekhov/Ариадна,Chekhov,Ариадна.txt,50575,train,27,27
+Chekhov/Архиерей,Chekhov,Архиерей.txt,29483,test,15,0
+"Chekhov/Ах, зубы",Chekhov,"Ах, зубы.txt",3977,train,2,2
+Chekhov/Бабы,Chekhov,Бабы.txt,23947,test,13,0
+Chekhov/Баран и барышня,Chekhov,Баран и барышня.txt,3444,valid,1,0
+Chekhov/Барыня,Chekhov,Барыня.txt,34848,train,18,18
+Chekhov/Беглец,Chekhov,Беглец.txt,13111,valid,7,0
+Chekhov/Беда 1886,Chekhov,Беда 1886.txt,6892,train,3,3
+Chekhov/Беда 1887,Chekhov,Беда 1887.txt,11630,train,6,6
+Chekhov/Беззащитное существо,Chekhov,Беззащитное существо.txt,8546,test,4,0
+Chekhov/Белолобый,Chekhov,Белолобый.txt,9984,train,5,5
+Chekhov/Беседа пьяного с трезвым чёртом,Chekhov,Беседа пьяного с трезвым чёртом.txt,3450,train,1,1
+Chekhov/Брак по расчёту,Chekhov,Брак по расчёту.txt,7410,train,3,3
+Chekhov/Брожение умов,Chekhov,Брожение умов.txt,6526,valid,3,0
+Chekhov/Бумажник,Chekhov,Бумажник.txt,4838,train,2,2
+Chekhov/В аптеке,Chekhov,В аптеке.txt,7195,train,3,3
+Chekhov/В вагоне,Chekhov,В вагоне.txt,9371,train,4,4
+Chekhov/В овраге,Chekhov,В овраге.txt,71293,valid,39,0
+Chekhov/В потёмках,Chekhov,В потёмках.txt,7821,train,4,4
+Chekhov/В ссылке,Chekhov,В ссылке.txt,16833,train,9,9
+Chekhov/В суде,Chekhov,В суде.txt,12500,train,6,6
+Chekhov/Ванька,Chekhov,Ванька.txt,7175,test,3,0
+Chekhov/Ведьма,Chekhov,Ведьма.txt,21712,valid,11,0
+Chekhov/Верочка,Chekhov,Верочка.txt,24144,train,12,12
+Chekhov/Винт,Chekhov,Винт.txt,6562,train,3,3
+Chekhov/Водевиль,Chekhov,Водевиль.txt,6778,train,3,3
+Chekhov/Володя,Chekhov,Володя.txt,23401,train,12,12
+Chekhov/Восклицательный знак,Chekhov,Восклицательный знак.txt,8280,valid,4,0
+Chekhov/Враги,Chekhov,Враги.txt,25249,test,13,0
+Chekhov/Выигрышный билет,Chekhov,Выигрышный билет.txt,8543,train,4,4
+Chekhov/Глупый француз,Chekhov,Глупый француз.txt,5775,valid,3,0
+Chekhov/Горе,Chekhov,Горе.txt,9789,test,5,0
+Chekhov/Гость,Chekhov,Гость.txt,7176,train,3,3
+Chekhov/Грешник из Толедо,Chekhov,Грешник из Толедо.txt,10607,valid,5,0
+Chekhov/Гриша,Chekhov,Гриша.txt,5568,train,3,3
+Chekhov/Гусев,Chekhov,Гусев.txt,23779,train,12,12
+Chekhov/Дама с собачкой,Chekhov,Дама с собачкой.txt,30939,train,17,17
+Chekhov/Дачники,Chekhov,Дачники.txt,3209,train,1,1
+Chekhov/Дачница,Chekhov,Дачница.txt,4634,valid,2,0
+Chekhov/Два скандала,Chekhov,Два скандала.txt,19455,train,10,10
+Chekhov/Двадцать девятое июня,Chekhov,Двадцать девятое июня.txt,12528,test,6,0
+Chekhov/День за городом,Chekhov,День за городом.txt,10861,train,5,5
+Chekhov/Детвора,Chekhov,Детвора.txt,9308,train,4,4
+Chekhov/Дипломат,Chekhov,Дипломат.txt,7238,train,3,3
+Chekhov/Добрый знакомый,Chekhov,Добрый знакомый.txt,2343,train,1,1
+Chekhov/Дом с мезонином,Chekhov,Дом с мезонином.txt,34575,valid,18,0
+Chekhov/Дома,Chekhov,Дома.txt,17564,train,9,9
+Chekhov/Дорогая собака,Chekhov,Дорогая собака.txt,4236,train,2,2
+Chekhov/Дорогие уроки,Chekhov,Дорогие уроки.txt,12002,train,6,6
+Chekhov/Дочь Альбиона,Chekhov,Дочь Альбиона.txt,6475,test,3,0
+Chekhov/Драма на охоте,Chekhov,Драма на охоте.txt,339893,test,123,0
+Chekhov/Душечка,Chekhov,Душечка.txt,23458,train,12,12
+Chekhov/Дуэль,Chekhov,Дуэль.txt,194296,test,102,0
+Chekhov/Злоумышленник,Chekhov,Злоумышленник.txt,6655,train,3,3
+Chekhov/Ионыч,Chekhov,Ионыч.txt,33559,valid,18,0
+Chekhov/Каштанка,Chekhov,Каштанка.txt,37507,train,19,19
+Chekhov/Крыжовник,Chekhov,Крыжовник.txt,19743,valid,10,0
+Chekhov/Лошадиная фамилия,Chekhov,Лошадиная фамилия.txt,6168,test,3,0
+Chekhov/Налим,Chekhov,Налим.txt,8395,test,4,0
+Chekhov/О любви,Chekhov,О любви.txt,18221,train,10,10
+Chekhov/Палата №6,Chekhov,Палата №6.txt,102688,test,54,0
+Chekhov/Пересолил,Chekhov,Пересолил.txt,7145,train,3,3
+Chekhov/Смерть чиновника,Chekhov,Смерть чиновника.txt,4573,valid,2,0
+Chekhov/Толстый и тонкий,Chekhov,Толстый и тонкий.txt,3485,valid,1,0
+Chekhov/Тоска,Chekhov,Тоска.txt,9340,test,4,0
+Chekhov/Хамелеон,Chekhov,Хамелеон.txt,5809,train,3,3
+Chekhov/Хирургия,Chekhov,Хирургия.txt,6128,train,3,3
+Chekhov/Человек в футляре,Chekhov,Человек в футляре.txt,25081,train,13,13
+Gogol/Вий,Gogol,Вий.txt,74303,train,39,39
+Gogol/Записки сумасшедшего,Gogol,Записки сумасшедшего.txt,40754,train,22,22
+Gogol/Коляска,Gogol,Коляска.txt,23185,valid,11,0
+Gogol/Мёртвые души,Gogol,Мёртвые души.txt,749221,test,386,0
+Gogol/Невский проспект,Gogol,Невский проспект.txt,72127,train,36,36
+Gogol/Нос,Gogol,Нос.txt,49495,test,25,0
+Gogol/Ночь перед Рождеством,Gogol,Ночь перед Рождеством.txt,82396,train,44,44
+"Gogol/Повесть о том, как поссорился Иван Иванович с Иваном Никифоровичем",Gogol,"Повесть о том, как поссорился Иван Иванович с Иваном Никифоровичем.txt",92978,train,46,46
+Gogol/Портрет,Gogol,Портрет.txt,114308,train,57,50
+Gogol/Рим,Gogol,Рим.txt,84441,valid,41,0
+Gogol/Старосветские помещики,Gogol,Старосветские помещики.txt,46311,valid,23,0
+Gogol/Тарас Бульба,Gogol,Тарас Бульба.txt,232094,test,122,0
+Gogol/Шинель,Gogol,Шинель.txt,65148,train,33,33
+Turgenev/Ася,Turgenev,Ася.txt,85827,valid,46,0
+Turgenev/Вешние воды,Turgenev,Вешние воды.txt,252697,train,130,50
+Turgenev/Дворянское гнездо,Turgenev,Дворянское гнездо.txt,302723,test,157,0
+Turgenev/Дым,Turgenev,Дым.txt,324005,train,165,50
+Turgenev/Муму,Turgenev,Муму.txt,53513,valid,28,0
+Turgenev/Отцы и дети,Turgenev,Отцы и дети.txt,354297,train,182,50
+Turgenev/Первая любовь,Turgenev,Первая любовь.txt,117387,train,63,50
+Turgenev/Яков Пасынков,Turgenev,Яков Пасынков.txt,71916,test,37,0

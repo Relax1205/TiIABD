@@ -1,0 +1,35 @@
+{
+  "selected_model": "NB_BOW",
+  "labels": [
+    "Chekhov",
+    "Gogol",
+    "Turgenev"
+  ],
+  "baseline_author": "Chekhov",
+  "fragment": {
+    "accuracy": 0.9030470914127424,
+    "macro_f1": 0.8902046667445248,
+    "weighted_f1": 0.9044110865666963,
+    "log_loss": 0.962465583435314
+  },
+  "work": {
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "weighted_f1": 1.0
+  },
+  "baseline_fragment": {
+    "accuracy": 0.32871652816251157,
+    "macro_f1": 0.16492934908501275,
+    "weighted_f1": 0.16264500906998489
+  },
+  "baseline_work": {
+    "accuracy": 0.75,
+    "macro_f1": 0.2857142857142857,
+    "weighted_f1": 0.6428571428571428
+  },
+  "test_work_support": [
+    15,
+    3,
+    2
+  ]
+}

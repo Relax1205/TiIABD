@@ -1,0 +1,6 @@
+{
+  "accuracy": 0.8987,
+  "macro_f1": 0.8975230504735325,
+  "test_size": 10000,
+  "parameters": 7850
+}

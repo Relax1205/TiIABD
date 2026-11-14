@@ -1,0 +1,95 @@
+author,work_group,split
+Chekhov,Chekhov/Агафья,train
+Chekhov,Chekhov/Альбом,valid
+Chekhov,Chekhov/Анна на шее,train
+Chekhov,Chekhov/Анюта,train
+Chekhov,Chekhov/Аптекарша,test
+Chekhov,Chekhov/Ариадна,train
+Chekhov,Chekhov/Архиерей,test
+Chekhov,"Chekhov/Ах, зубы",train
+Chekhov,Chekhov/Бабы,test
+Chekhov,Chekhov/Баран и барышня,valid
+Chekhov,Chekhov/Барыня,train
+Chekhov,Chekhov/Беглец,valid
+Chekhov,Chekhov/Беда 1886,train
+Chekhov,Chekhov/Беда 1887,train
+Chekhov,Chekhov/Беззащитное существо,test
+Chekhov,Chekhov/Белолобый,train
+Chekhov,Chekhov/Беседа пьяного с трезвым чёртом,train
+Chekhov,Chekhov/Брак по расчёту,train
+Chekhov,Chekhov/Брожение умов,valid
+Chekhov,Chekhov/Бумажник,train
+Chekhov,Chekhov/В аптеке,train
+Chekhov,Chekhov/В вагоне,train
+Chekhov,Chekhov/В овраге,valid
+Chekhov,Chekhov/В потёмках,train
+Chekhov,Chekhov/В ссылке,train
+Chekhov,Chekhov/В суде,train
+Chekhov,Chekhov/Ванька,test
+Chekhov,Chekhov/Ведьма,valid
+Chekhov,Chekhov/Верочка,train
+Chekhov,Chekhov/Винт,train
+Chekhov,Chekhov/Водевиль,train
+Chekhov,Chekhov/Володя,train
+Chekhov,Chekhov/Восклицательный знак,valid
+Chekhov,Chekhov/Враги,test
+Chekhov,Chekhov/Выигрышный билет,train
+Chekhov,Chekhov/Глупый француз,valid
+Chekhov,Chekhov/Горе,test
+Chekhov,Chekhov/Гость,train
+Chekhov,Chekhov/Грешник из Толедо,valid
+Chekhov,Chekhov/Гриша,train
+Chekhov,Chekhov/Гусев,train
+Chekhov,Chekhov/Дама с собачкой,train
+Chekhov,Chekhov/Дачники,train
+Chekhov,Chekhov/Дачница,valid
+Chekhov,Chekhov/Два скандала,train
+Chekhov,Chekhov/Двадцать девятое июня,test
+Chekhov,Chekhov/День за городом,train
+Chekhov,Chekhov/Детвора,train
+Chekhov,Chekhov/Дипломат,train
+Chekhov,Chekhov/Добрый знакомый,train
+Chekhov,Chekhov/Дом с мезонином,valid
+Chekhov,Chekhov/Дома,train
+Chekhov,Chekhov/Дорогая собака,train
+Chekhov,Chekhov/Дорогие уроки,train
+Chekhov,Chekhov/Дочь Альбиона,test
+Chekhov,Chekhov/Драма на охоте,test
+Chekhov,Chekhov/Душечка,train
+Chekhov,Chekhov/Дуэль,test
+Chekhov,Chekhov/Злоумышленник,train
+Chekhov,Chekhov/Ионыч,valid
+Chekhov,Chekhov/Каштанка,train
+Chekhov,Chekhov/Крыжовник,valid
+Chekhov,Chekhov/Лошадиная фамилия,test
+Chekhov,Chekhov/Налим,test
+Chekhov,Chekhov/О любви,train
+Chekhov,Chekhov/Палата №6,test
+Chekhov,Chekhov/Пересолил,train
+Chekhov,Chekhov/Смерть чиновника,valid
+Chekhov,Chekhov/Толстый и тонкий,valid
+Chekhov,Chekhov/Тоска,test
+Chekhov,Chekhov/Хамелеон,train
+Chekhov,Chekhov/Хирургия,train
+Chekhov,Chekhov/Человек в футляре,train
+Gogol,Gogol/Вий,train
+Gogol,Gogol/Записки сумасшедшего,train
+Gogol,Gogol/Коляска,valid
+Gogol,Gogol/Мёртвые души,test
+Gogol,Gogol/Невский проспект,train
+Gogol,Gogol/Нос,test
+Gogol,Gogol/Ночь перед Рождеством,train
+Gogol,"Gogol/Повесть о том, как поссорился Иван Иванович с Иваном Никифоровичем",train
+Gogol,Gogol/Портрет,train
+Gogol,Gogol/Рим,valid
+Gogol,Gogol/Старосветские помещики,valid
+Gogol,Gogol/Тарас Бульба,test
+Gogol,Gogol/Шинель,train
+Turgenev,Turgenev/Ася,valid
+Turgenev,Turgenev/Вешние воды,train
+Turgenev,Turgenev/Дворянское гнездо,test
+Turgenev,Turgenev/Дым,train
+Turgenev,Turgenev/Муму,valid
+Turgenev,Turgenev/Отцы и дети,train
+Turgenev,Turgenev/Первая любовь,train
+Turgenev,Turgenev/Яков Пасынков,test

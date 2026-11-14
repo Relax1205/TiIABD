@@ -1,0 +1,25 @@
+{
+  "model": "LR_BOW",
+  "label_names": {
+    "0": "Нейтральный",
+    "1": "Положительный",
+    "2": "Отрицательный"
+  },
+  "seed": 42,
+  "source": "rureviews",
+  "input_column": "text",
+  "token_pattern": "[а-яёa-z0-9]+(?:[-’'][а-яёa-z0-9]+)*|[!?]+|[()]{2,}",
+  "split": "hash(token-sequence group): 70/15/15",
+  "max_vocab_size": 20000,
+  "fitted_vocab_size": 15361,
+  "min_df": 3.0,
+  "reg_param": 0.001,
+  "spark_version": "3.5.3",
+  "python_version": "3.12.10",
+  "test_metrics": {
+    "accuracy": 0.7379995450064457,
+    "macro_f1": 0.7402699963955706,
+    "weighted_f1": 0.7405191500283184,
+    "log_loss": 0.6405865298693171
+  }
+}
